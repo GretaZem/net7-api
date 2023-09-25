@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace net7_api
 {
-    public class PolutionPoint
+    public class PollutionPoint
     {
         [JsonProperty("_type")]
         public string? Type { get; set; }
