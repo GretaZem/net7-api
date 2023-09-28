@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using net7_api;
 using net7_api.Context;
+using net7_api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApiDbContext>(opt =>
     opt.UseInMemoryDatabase("ApiDb"));
+builder.Services.AddHttpClient();
+
+builder.Services.AddScoped<ExternalApiService>();
+builder.Services.AddScoped<DataImporter>();
 
 var app = builder.Build();
 
