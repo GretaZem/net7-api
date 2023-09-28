@@ -19,15 +19,21 @@ namespace net7_api
         public async Task ImportAsync()
         {
             var data = await _externalApiService.GetDataFromExternalApiAsync();
-
             var mapper = InitAutoMapper();
 
-            foreach (var item in data)
+            try
             {
-                _dbContext.Add(mapper.Map<PollutionPointModel>(item));
-            }
+                foreach (var item in data)
+                {
+                    _dbContext.Add(mapper.Map<PollutionPointModel>(item));
+                }
 
-            _dbContext.SaveChanges();
+                _dbContext.SaveChanges();
+            }
+            catch (ArgumentException) 
+            { 
+                // item already exists
+            }
         }
 
         private Mapper InitAutoMapper()
