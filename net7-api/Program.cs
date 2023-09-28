@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using net7_api;
 using net7_api.Context;
 using net7_api.Services;
 
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<ApiDbContext>(opt =>
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<ExternalApiService>();
+builder.Services.AddScoped<DataImporter>();
 
 var app = builder.Build();
 
