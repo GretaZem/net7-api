@@ -11,11 +11,13 @@ namespace net7_api.Controllers
     [Route("[controller]")]
     public class PollutionPointController : ControllerBase
     {
+        private readonly ILogger<PollutionPointController> _logger;
         private readonly ApiDbContext _context;
         private readonly DataImporter _dataImporter;
 
-        public PollutionPointController(ApiDbContext apiDbContext, DataImporter dataImporter)
+        public PollutionPointController(ILogger<PollutionPointController> logger, ApiDbContext apiDbContext, DataImporter dataImporter)
         {
+            _logger = logger;
             _context = apiDbContext;
             _dataImporter = dataImporter;
         }
@@ -23,8 +25,10 @@ namespace net7_api.Controllers
         [HttpGet(Name = "GetPollutionPoints")]
         public async Task<ActionResult<IEnumerable<PollutionPointGroup>>> Get()
         {
+            _logger.LogInformation("Getting Pollution points.");
             await _dataImporter.ImportAsync();
             var mapper = InitAutoMapper();
+
             var data = _context.PollutionPoints
                 .GroupBy(x => x.ObjectType)
                 .Select(g => new PollutionPointGroup

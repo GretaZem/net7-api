@@ -7,11 +7,13 @@ namespace net7_api
 {
     public class DataImporter
     {
+        private readonly ILogger<DataImporter> _logger;
         private ApiDbContext _dbContext;
         private readonly ExternalApiService _externalApiService;
 
-        public DataImporter(ApiDbContext dbContext, ExternalApiService externalApiService)
+        public DataImporter(ILogger<DataImporter> logger, ApiDbContext dbContext, ExternalApiService externalApiService)
         {
+            _logger = logger;
             _dbContext = dbContext;
             _externalApiService = externalApiService;
         }
@@ -31,8 +33,8 @@ namespace net7_api
                 _dbContext.SaveChanges();
             }
             catch (ArgumentException) 
-            { 
-                // item already exists
+            {
+                _logger.LogInformation("Item already exists in database");
             }
         }
 
