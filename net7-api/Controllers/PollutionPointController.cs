@@ -21,19 +21,23 @@ namespace net7_api.Controllers
         }
 
         [HttpGet(Name = "GetPollutionPoints")]
-        public async Task<ActionResult<IEnumerable<PollutionPoint>>> Get()
+        public async Task<ActionResult<IEnumerable<PollutionPointGroup>>> Get()
         {
             await _dataImporter.ImportAsync();
-            var data = _context.PollutionPoints.Take(2).ToList(); // returning 2, since Swagger can't handle whole list
-
-            var response = new List<PollutionPoint>();
             var mapper = InitAutoMapper();
-            foreach (var item in data)
+            var data = _context.PollutionPoints
+                .GroupBy(x => x.ObjectType)
+                .Select(g => new PollutionPointGroup
             {
-                response.Add(mapper.Map<PollutionPoint>(item));
-            }
+                PollutionPointType = g.Key,
+                GroupSize = g.Count(),
+                PollutionPoints = g.Select(
+                    x => mapper.Map<PollutionPoint>(x)
+                    ).ToList()
+            })
+            .ToList();
 
-            return Ok(JsonConvert.SerializeObject(response));
+            return Ok(JsonConvert.SerializeObject(data));
         }
 
         private Mapper InitAutoMapper()
