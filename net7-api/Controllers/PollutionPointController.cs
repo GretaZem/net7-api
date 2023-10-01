@@ -26,7 +26,6 @@ namespace net7_api.Controllers
         public async Task<ActionResult<IEnumerable<PollutionPointGroup>>> Get()
         {
             _logger.LogInformation("Getting Pollution points.");
-            await _dataImporter.ImportAsync();
             var mapper = InitAutoMapper();
 
             var data = _context.PollutionPoints
