@@ -18,6 +18,8 @@ namespace net7_api
             _externalApiService = externalApiService;
         }
 
+        public void Import() { ImportAsync().Wait(); } // hangfire does not support async
+
         public async Task ImportAsync()
         {
             var data = await _externalApiService.GetDataFromExternalApiAsync();
